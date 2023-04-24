@@ -20,8 +20,26 @@ router.post('/', validator.body(userSchema), async (request, response, error) =>
   return response.status(201).json(user); 
 });
 
-router.get('/', (request, response, error) => {
-  response.send("hola desde /users")  
+router.get("/:id", async (request, response) => {
+  const { id } = request.params;
+  const user = await User.findById(id);
+  if (user != null) {
+    return response.status(200).json(user);
+  } else {
+    return response.status(404).json({menssage: "User not found"});
+  }
+})
+
+router.put("/:id", validator.body(userSchema), async (request, response) => {
+  const { id } = request.params;
+  const updatedUser = await User.findByIdAndUpdate(id , request.body);
+  return response.status(200).json(updatedUser);
+});
+
+router.delete("/:id", async (request, response) => {
+  const { id } = request.params;
+  const deletedUser = await User.findByIdAndDelete(id);
+  return response.status(200).json(deletedUser);
 });
 
 export default router;
