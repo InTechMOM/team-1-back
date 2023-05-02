@@ -2,10 +2,10 @@ import express from "express";
 import Joi from 'joi';
 import { createValidator } from 'express-joi-validation'
 
-import User from "../../../models/users.js";
+import User from "../../models/users.js";
 
 const router = express.Router();
-const validator = createValidator()
+const validator = createValidator();
 
 const userSchema = Joi.object({
   firstName: Joi.string().required(),
@@ -14,7 +14,7 @@ const userSchema = Joi.object({
   rol: Joi.string().valid('teacher','student').required(),
 })
 
-router.post('/', validator.body(userSchema), async (request, response, error) => {
+router.post('/', validator.body(userSchema), async (request, response) => {
   const newUser = new User({ ...request.body });
   const user = await newUser.save();
   return response.status(201).json(user); 
