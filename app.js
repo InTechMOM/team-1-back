@@ -2,7 +2,7 @@ import express from "express";
 
 import { port } from "./src/config/index.js";
 import { dbConnection } from "./src/config/db_connection.js";
-import usersRouter from "./src/api/users/routes/index.js";
+import router from "./src/router.js"
 
 const app = express();
 
@@ -10,13 +10,7 @@ const app = express();
 dbConnection();
 
 app.use(express.json());
-
-// Load routers
-app.use('/users', usersRouter);
-
-app.get("/", (request, response, error) => {
-  response.send("status: ok")  
-})
+app.use("/", router);
 
 // Runing the server
 app.listen(port, (error) => {
