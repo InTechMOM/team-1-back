@@ -18,7 +18,7 @@ const getUser = async (request, response) => {
 const putUser = async (request, response) => {
   const { id } = request.params;
   const user = await User.findById(id);
-  if (user === null) {
+  if (!user) {
     return response.status(404).json({message: "User not found"});
   }
   const updatedUser = await User.findByIdAndUpdate(id , request.body, { new: true });
@@ -28,7 +28,7 @@ const putUser = async (request, response) => {
 const deleteUser = async (request, response) => {
   const { id } = request.params;
   const user = await User.findById(id);
-  if (user === null) {
+  if (!user) {
     return response.status(404).json({menssage: "User not found"});
   }
   const deletedUser = await User.findByIdAndDelete(id);
