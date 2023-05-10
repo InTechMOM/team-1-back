@@ -13,6 +13,10 @@ app.use(express.json());
 app.use("/", router);
 
 // Runing the server
+app.get("/", (request, response, error) => {
+  response.send("status: ok")  
+})
+
 app.listen(port, (error) => {
   if (error) {
     console.log("Server Error: Failed");
