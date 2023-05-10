@@ -1,8 +1,11 @@
 import express from "express";
-import * as mongoose from "mongoose"
-import { port } from "./config/index.js";
+import { port } from "./src/config/index.js";
+import { dbConnection } from "./src/config/db_connection.js";
 
 const app = express();
+
+// Connect with mongoDB
+dbConnection();
 
 app.get("/", (request, response, error) => {
   response.send("status: ok")  
@@ -17,8 +20,4 @@ app.listen(port, (error) => {
   console.log(`server listening in port ${port}`)
 })
 
-// mongodb conection
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("Connected to MongoDB Atlas"))
-  .catch((error) => console.error(error));
+
