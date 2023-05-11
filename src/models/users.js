@@ -13,7 +13,7 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    // Falta: validar que sea un email
+    unique: true,
   },
   rol: {
     type: String,
