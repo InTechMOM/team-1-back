@@ -1,15 +1,15 @@
 import express from "express";
 
-import validateRequest from "./validate.js";
+import { createValidateRequest, updateValidateRequest } from "./validate.js";
 import { createUser, getUser, putUser, deleteUser } from "./controllers.js";
 
 const router = express.Router();
 
-router.post('/', validateRequest, createUser);
+router.post('/', createValidateRequest, createUser);
 
 router.get("/:id", getUser);
 
-router.put("/:id", validateRequest, putUser); 
+router.put("/:id", updateValidateRequest, putUser); 
 
 router.delete("/:id", deleteUser);
 
