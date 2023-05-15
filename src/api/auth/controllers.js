@@ -4,8 +4,8 @@ import User from "../../models/users.js";
 const login = async (request, response) => {
   const { email, rol } = request.body;
   const user = await User.findOne({ email: email, rol: rol });
-  if (user === null){
-    return response.status(404).json({menssage: "invalid email or rol"});
+  if (!user){
+    return response.status(403).json({menssage: "User not authorized"});
   }
   return response.status(200).json(user);
 }
