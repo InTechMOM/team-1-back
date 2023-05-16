@@ -8,6 +8,12 @@ const router = express.Router();
  * @swagger
  * components:
  *   schemas:
+ *     InvalidId:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ * 
  *     UserCreate:
  *       type: object
  *       required:
@@ -25,11 +31,13 @@ const router = express.Router();
  *           format: email
  *         rol:
  *           type: string
+ *           enum: [student, teacher]
  *       example:
  *         firstName: Sheldon
  *         lastName: Cooper
  *         email: scooper@email.com
  *         rol: teacher
+ * 
  *     UserUpdate:
  *       type: object
  *       required:
@@ -43,6 +51,7 @@ const router = express.Router();
  *       example:
  *         firstName: Sheldon
  *         lastName: Cooper
+ * 
  *     User:
  *       type: object
  *       required:
@@ -63,6 +72,7 @@ const router = express.Router();
  *           format: email
  *         rol:
  *           type: string
+ *           enum: [student, teacher]
  *         createdAt:
  *           type: string
  *           format: date
@@ -125,6 +135,12 @@ router.post('/', createValidateRequest, createUser);
  *               $ref: '#/components/schemas/User'
  *       400:
  *         description: User not found
+ *       422: 
+ *         description: Invalid Id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvalidId'
  */
 router.get("/:id", getUser);
 
@@ -156,6 +172,12 @@ router.get("/:id", getUser);
  *               $ref: '#/components/schemas/User'
  *       400:
  *         description: User not found
+ *       422: 
+ *         description: Invalid Id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvalidId'
  */
 router.put("/:id", updateValidateRequest, putUser); 
 
@@ -181,6 +203,12 @@ router.put("/:id", updateValidateRequest, putUser);
 *               $ref: '#/components/schemas/User'
 *       400:
 *         description: User not found
+*       422: 
+*         description: Invalid Id
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/InvalidId'
 */
 router.delete("/:id", deleteUser);
 
