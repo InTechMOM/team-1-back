@@ -9,7 +9,7 @@ const router = express.Router();
  * tags:
  *   name: Authentication
  *   description: API for basic login
- * 
+ *
  * /auth/login:
  *   post:
  *     summary: Login
