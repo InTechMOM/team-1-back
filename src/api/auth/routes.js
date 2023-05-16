@@ -4,6 +4,6 @@ import validateRequest from "./validate.js";
 
 const router = express.Router();
 
-router.post('/login', validateRequest, login);
+router.post('/', validateRequest, login);
 
 export default router;
