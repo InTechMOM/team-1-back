@@ -1,8 +1,9 @@
 import express from "express";
-
+import swaggerUi from "swagger-ui-express";
 import { port } from "./src/config/index.js";
 import { dbConnection } from "./src/config/db_connection.js";
 import router from "./src/router.js"
+import { openApiSpecification } from "./src/config/swagger.js";
 
 const app = express();
 
@@ -16,6 +17,9 @@ app.use("/", router);
 app.get("/", (request, response, error) => {
   response.send("status: ok")  
 })
+
+app.use("/docs", swaggerUi.serve);
+app.get("/docs", swaggerUi.setup(openApiSpecification));
 
 app.listen(port, (error) => {
   if (error) {
