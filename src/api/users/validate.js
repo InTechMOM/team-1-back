@@ -7,7 +7,7 @@ const createUserSchema = Joi.object({
   rol: Joi.string().valid('teacher','student').required(),
 });
 
-const CreateValidateRequest = (request, response, next) => {
+const createValidateRequest = (request, response, next) => {
   const error = createUserSchema.validate(request.body).error;
   if (error) {
     const field = error.details[0].path.join('.');
@@ -25,7 +25,7 @@ const updateUserSchema = Joi.object({
   lastName: Joi.string().required(),
 });
 
-const UpdatealidateRequest = (request, response, next) => {
+const updateValidateRequest = (request, response, next) => {
   const error = updateUserSchema.validate(request.body).error;
   if (error) {
     const field = error.details[0].path.join('.');

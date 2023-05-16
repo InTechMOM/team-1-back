@@ -1,3 +1,4 @@
+import mongoose  from "mongoose";
 import User from "../../models/users.js";
 
 const createUser = async (request, response) => {
@@ -8,6 +9,9 @@ const createUser = async (request, response) => {
 
 const getUser = async (request, response) => {
   const { id } = request.params;
+  if (!mongoose.isValidObjectId(id)) {
+    return response.status(422).json({message: "Invalid Id"});
+  }
   const user = await User.findById(id);
   if (!user){
     return response.status(404).json({message: "User not found"});
@@ -17,6 +21,9 @@ const getUser = async (request, response) => {
 
 const putUser = async (request, response) => {
   const { id } = request.params;
+  if (!mongoose.isValidObjectId(id)) {
+    return response.status(422).json({message: "Invalid Id"});
+  }
   const user = await User.findById(id);
   if (!user) {
     return response.status(404).json({message: "User not found"});
@@ -27,9 +34,12 @@ const putUser = async (request, response) => {
 
 const deleteUser = async (request, response) => {
   const { id } = request.params;
+  if (!mongoose.isValidObjectId(id)) {
+    return response.status(422).json({message: "Invalid Id"});
+  }
   const user = await User.findById(id);
   if (!user) {
-    return response.status(404).json({menssage: "User not found"});
+    return response.status(404).json({message: "User not found"});
   }
   const deletedUser = await User.findByIdAndDelete(id);
   return response.status(200).json(deletedUser);
