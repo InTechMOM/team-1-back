@@ -22,7 +22,7 @@ const createValidateRequest = (request, response, next) => {
 const updateProjectSchema = Joi.object({
   link1: Joi.string().uri(),
   link2: Joi.string().uri(),
-  link3: Joi.string().uri(),
+link3: Joi.string().uri(),
 });
 
 const updateValidateRequest = (request, response, next) => {
