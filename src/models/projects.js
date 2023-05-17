@@ -1,16 +1,20 @@
 import { Schema, model } from "mongoose";
 
 // Definimos la estructura de datos del video
-const videoSchema = new Schema({
-  link: {
+const projectSchema = new Schema({
+  link1: {
     type: String,
-    required: true,
+    required: false,
+  },
+  link2: {
+    type: String,
+    required: false,
+  },
+  link3: {
+    type: String,
+    required: false,
   },
   title: {
-    type: String,
-    required: true,
-  },
-  description: {
     type: String,
     required: true,
   },
@@ -31,6 +35,6 @@ const videoSchema = new Schema({
 });
 
 // creamos la tabla de videos
-const Video = model('Video', videoSchema);
+const Project = model('Project', projectSchema);
 
-export default Video;
+export default Project;

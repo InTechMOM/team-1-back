@@ -1,8 +1,8 @@
 import Joi from 'joi';
 
-const videoSchema = Joi.object({
+const projectSchema = Joi.object({
   //falta: controlar que sea un url de youtube
-  link: Joi.string().uri().required(),
+  link: Joi.string().uri(),
   title: Joi.string().required(),
   description: Joi.string().required(),
   studentEmail: Joi.string().email().required(),
@@ -10,7 +10,7 @@ const videoSchema = Joi.object({
 });
 
 const validateRequest = (request, response, next) => {
-  const error = videoSchema.validate(request.body).error;
+  const error = projectSchema.validate(request.body).error;
   if (error) {
     const field = error.details[0].path.join('.');
     const message = error.details[0].message.replace(/"/g, "'");
