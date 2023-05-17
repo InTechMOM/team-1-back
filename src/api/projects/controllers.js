@@ -32,7 +32,7 @@ const getProject = async (request, response) => {
   return response.status(200).json(project);
 };
 
-//Sólo podrá editarse el video en caso de desaprobar 
+//El proyecto se edita cada vez que se cargue un video
 const editProject = async (request, response) => {
   const { id } = request.params;
   if (!mongoose.isValidObjectId(id)) {
