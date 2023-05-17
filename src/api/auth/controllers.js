@@ -8,6 +8,6 @@ const login = async (request, response) => {
 		return response.status(403).json({ message: "User not authorized" });
 	}
 	return response.status(200).json(user);
-}
+};
 
 export { login };

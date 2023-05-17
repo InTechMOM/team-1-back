@@ -3,7 +3,7 @@ import Joi from "joi";
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   rol: Joi.string().valid('teacher', 'student').required(),
-})
+});
 
 const validateRequest = (request, response, next) => {
   const error = loginSchema.validate(request.body).error;
