@@ -24,7 +24,7 @@ const router = express.Router();
  *               email:
  *                 type: string
  *                 description: user email.
- *                 example: cltazz@email.com
+ *                 example: scooper@email.com
  *               rol:
  *                 type: string
  *                 description: user rol. Should by "student" or "teacher"
@@ -39,8 +39,6 @@ const router = express.Router();
  *       403:
  *         description: User not authorized
  */
-
-
 router.post('/login', validateRequest, login);
 
 export default router;

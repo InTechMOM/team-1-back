@@ -34,7 +34,7 @@ const getProject = async (request, response) => {
 
 //El proyecto se edita cada vez que se cargue un video
 const uploadProject = async (request, response) => {
-  if(!object.keys(request.body).length) { 
+  if(!Object.keys(request.body).length) { 
     return response.status(400).json({ message: "Must send video URL" });
   }
 
@@ -58,7 +58,9 @@ const uploadProject = async (request, response) => {
     return response.status(400).json({message: "Video already uploaded" });
   }
 
-  const updatedProject = await Project.findByIdAndUpdate(id , request.body, { new: true });
+  const updatedProject = await Project.findByIdAndUpdate(
+    id , request.body, { new: true })
+  .populate("teacher student");
   return response.status(200).json(updatedProject);
 };
 
