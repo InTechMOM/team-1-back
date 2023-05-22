@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import Project from "../../models/projects.js";
 import User from "../../models/users.js";
+import Video from "../../models/videos.js";
+import { request, response } from "express";
 
 const createProject = async (request, response) => {
   const student = await User.findOne({ email: request.body.studentEmail , rol: "student" });
@@ -25,7 +27,7 @@ const getProject = async (request, response) => {
   if (!mongoose.isValidObjectId(id)) {
     return response.status(422).json({message: "Invalid Id"});
   }
-  const project = await Project.findById(id).populate("teacher student");
+  const project = await Project.findById(id).populate("teacher student videos");
   if (!project){
     return response.status(404).json({message: "Project not found"});
   }
@@ -33,34 +35,57 @@ const getProject = async (request, response) => {
 };
 
 //El proyecto se edita cada vez que se cargue un video
-const uploadProject = async (request, response) => {
-  if(!Object.keys(request.body).length) { 
-    return response.status(400).json({ message: "Must send video URL" });
-  }
+const addVideo = async (request, response) => {
+  //Se chequea que al menos uno de los tres links exista
+  // if(!Object.keys(request.body).length) { 
+  //   return response.status(400).json({ message: "Must send video URL" });
+  // }
 
   const { id } = request.params;
-  
+  //Se chequea que el Id del proyecto sea un Id de Mongoose válido
   if (!mongoose.isValidObjectId(id)) {
     return response.status(422).json({message: "Invalid Id"});
   }
   
-  const project = await Project.findById(id).populate("teacher student");
-  
+  const project = await Project.findById(id).populate("videos");
+  //Se chequea que efectivamente exista el proyecto
   if (!project) {
     return response.status(404).json({message: "Project not found"});
   }
   
-  if (request.body.link1 && project.link1) {
+  if (request.body.order == 0 && project.videos.length != 0) {
     return response.status(400).json({message: "Video already uploaded" });
-  } else if (request.body.link2 && project.link2) {
-    return response.status(400).json({message: "Video already uploaded" });
-  } else if (request.body.link3 && project.link3) {
-    return response.status(400).json({message: "Video already uploaded" });
-  }
+  } else if (request.body.order == 1) {
+    if (project.videos.length == 2){
+      return response.status(400).json({message: "Video already uploaded" });
+    } else if (project.videos.length != 1) {
+      return response.status(400).json({message: "Previous video was not uploaded"});
+    } else if (project.videos[0].approved != true) {
+      return response.status(400).json({message: "Previos video is not approved"});
+    } 
+  } else if (request.body.order == 2) {
+    if (project.videos.length == 3) {
+      return response.status(400).json({message: "Video already uploaded" });
+    } else if (project.videos.length != 2) {
+      return response.status(400).json({message: "Previous video was not uploaded" });
+    } else if (project.videos[1].approved != true) {
+      return response.status(400).json({message: "Previos video is not approved"});
+    }
+  } 
+
+  const newVideo = new Video({
+    url: request.body.link,
+  });
+  const video = await newVideo.save();
+
+  //Se crea una lista con los videos actuales 
+  //y se agrega el Id del nuevo video
+  const videos = [...project.videos];
+  videos.push(video._id);
 
   const updatedProject = await Project.findByIdAndUpdate(
-    id , request.body, { new: true })
-  .populate("teacher student");
+    id , {videos: videos}, { new: true })
+  .populate("teacher student videos");
   return response.status(200).json(updatedProject);
 };
 
@@ -78,4 +103,31 @@ const deleteProject = async (request, response) => {
   return response.status(200).json(deletedProject);
 };
 
-export { createProject, getProject, uploadProject, deleteProject };
+const evaluateVideo = async (request, response) => {
+  const { id, videoId } = request.params;
+  //Se chequea que el Id del proyecto y del video sean Id's de Mongoose válidos
+  if (!mongoose.isValidObjectId(id)) {
+    return response.status(422).json({message: "Invalid Id"});
+  }
+  if (!mongoose.isValidObjectId(videoId)) {
+    return response.status(422).json({message: "Invalid Id"});
+  }
+
+  //Se chequea que el Id del proyecto y del video existan en la base de datos
+  const project = await Project.findById(id);
+  if (!project) {
+    return response.status(404).json({message: "Project not found"});
+  }
+  const video = await Video.findById(videoId);
+  if (!video) {
+    return response.status(404).json({message: "Video not found"});
+  }
+
+  //Se actualiza el video
+  const updatedVideo = await Video.findByIdAndUpdate(
+    videoId , request.body, { new: true }
+  );
+  return response.status(200).json(updatedVideo);
+}
+
+export { createProject, getProject, addVideo, deleteProject, evaluateVideo };

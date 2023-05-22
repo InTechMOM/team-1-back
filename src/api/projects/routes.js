@@ -1,7 +1,17 @@
 import express from "express";
 
-import { createValidateRequest, updateValidateRequest } from "./validate.js";
-import { createProject, getProject, uploadProject, deleteProject } from "./controllers.js";
+import {
+  createValidateRequest, 
+  updateValidateRequest, 
+  evaluateValidateRequest
+} from "./validate.js";
+import {
+  createProject,
+  getProject,
+  addVideo,
+  deleteProject,
+  evaluateVideo
+} from "./controllers.js";
 
 const router = express.Router();
 
@@ -190,7 +200,7 @@ router.get("/:id", getProject);
  *             schema:
  *               $ref: '#/components/schemas/InvalidId'
  */
-router.put("/:id", updateValidateRequest, uploadProject); 
+router.put("/:id", updateValidateRequest, addVideo); 
 
 /**
 * @swagger
@@ -222,5 +232,7 @@ router.put("/:id", updateValidateRequest, uploadProject);
 *               $ref: '#/components/schemas/InvalidId'
 */
 router.delete("/:id", deleteProject);
+
+router.put("/:id/video/:videoId", evaluateValidateRequest, evaluateVideo);
 
 export default router;
