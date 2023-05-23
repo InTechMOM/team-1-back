@@ -19,6 +19,22 @@ const router = express.Router();
  * @swagger
  * components:
  *   schemas:
+ *     Video:
+ *       type: object
+ *       required:
+ *         - url
+ *       properties:
+ *         criticalThinking:
+ *          type: string
+ *         colaboration:
+ *          type: string
+ *         cromunication:
+ *          type: string
+ *         creativity:
+ *          type: string
+ *         approved:
+ *          type: boolean
+ * 
  *     ProjectCreate:
  *       type: object
  *       required:
@@ -42,17 +58,18 @@ const router = express.Router();
  *     ProjectUpdate:
  *       type: object
  *       properties:
- *         link1:
+ *         link:
  *           type: string
  *           format: uri
- *         link2:
- *           type: string
- *           format: uri
- *         link3:
- *           type: string
- *           format: uri
+ *           required: true
+ *         order: 
+ *           type: integer
+ *           required: true
+ *           minimum: 0
+ *           maximum: 2
  *       example:
- *          link1: http://ejemplo.com
+ *          link: http://ejemplo.com
+ *          order: 0
  * 
  *     Project:
  *       type: object
@@ -70,15 +87,10 @@ const router = express.Router();
  *           $ref: '#/components/schemas/User'
  *         title:
  *           type: string
- *         link1:
- *           type: string
- *           format: uri
- *         link2:
- *           type: string
- *           format: uri
- *         link3:
- *           type: string
- *           format: uri
+ *         videos:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Video'
  *         createdAt:
  *           type: string
  *           format: date
@@ -86,21 +98,25 @@ const router = express.Router();
  *       example:
  *         _id: 645d02643996292600e6f837
  *         student: 
- *            _id: 645d02643996292600e6f837
- *            firstName: Lenard
- *            lastName: Hofstatter
- *            email: lHafstatter@email.com
- *            rol: student
- *            createdAt: 2020-03-10T04:05:06.157Z
+ *           _id: 645d02643996292600e6f837
+ *           firstName: Lenard
+ *           lastName: Hofstatter
+ *           email: lHofstatter@email.com
+ *           rol: student
+ *           createdAt: 2020-03-10T04:05:06.157Z
  *         teacher:
- *            _id: 645d02643996292600e6f837
- *            firstName: Sheldon
- *            lastName: Cooper
- *            email: scooper@email.com
- *            rol: teacher
- *            createdAt: 2020-03-10T04:05:06.157Z
+ *           _id: 645d02643996292600e6f837
+ *           firstName: Sheldon
+ *           lastName: Cooper
+ *           email: scooper@email.com
+ *           rol: teacher
+ *           createdAt: 2020-03-10T04:05:06.157Z
  *         title: The Big Bang Theory
- *         link1: http://ejemplo.com
+ *         videos:
+ *           - _id: 646afbe615a05113d8edba68
+ *             url: http://hola.com
+ *             approved: true
+ *             creativity: muy bien
  *         createdAt: 2020-03-10T04:05:06.157Z
  */
 
@@ -144,7 +160,7 @@ router.post('/', createValidateRequest, createProject);
  *         schema:
  *           type: string
  *         required: true
- *         description: The project id
+ *         description: Project id
  *     responses:
  *       200:
  *         description: Project
@@ -167,7 +183,7 @@ router.get("/:id", getProject);
  * @swagger
  * /projects/{id}:
  *   put:
- *     summary: Update project
+ *     summary: Add video
  *     tags: [Projects]
  *     parameters:
  *       - in: path
@@ -175,7 +191,7 @@ router.get("/:id", getProject);
  *         schema:
  *           type: string
  *         required: true
- *         description: The project id
+ *         description: Project id
  *     requestBody:
  *       required: true
  *       content:
@@ -214,7 +230,7 @@ router.put("/:id", updateValidateRequest, addVideo);
 *         schema:
 *           type: string
 *         required: true
-*         description: The project id
+*         description: Project id
 *     responses:
 *       200:
 *         description: Project deleted
@@ -233,6 +249,58 @@ router.put("/:id", updateValidateRequest, addVideo);
 */
 router.delete("/:id", deleteProject);
 
+/**
+* @swagger
+* /projects/{id}/video/:videoId:
+*   put:
+*     summary: Evaluate a video
+*     tags: [Projects]
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: Project id
+*       - in: path
+*         name: videoId
+*         schema:
+*           type: string
+*         required: true
+*         description: Video id
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               criticalThinking:
+*                 type: string
+*               colaboration:
+*                 type: string
+*               comunication:
+*                 type: string
+*               creativity:
+*                 type: string
+*               approved:
+*                 type: boolean
+*     responses:
+*       200:
+*         description: Video evaluated
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/Project'
+*       404:
+*         description: Project not found
+*       422: 
+*         description: Invalid Id
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/InvalidId'
+*/
 router.put("/:id/video/:videoId", evaluateValidateRequest, evaluateVideo);
 
 export default router;

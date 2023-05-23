@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import Project from "../../models/projects.js";
 import User from "../../models/users.js";
 import Video from "../../models/videos.js";
-import { request, response } from "express";
 
 const createProject = async (request, response) => {
   const student = await User.findOne({ email: request.body.studentEmail , rol: "student" });
@@ -36,11 +35,6 @@ const getProject = async (request, response) => {
 
 //El proyecto se edita cada vez que se cargue un video
 const addVideo = async (request, response) => {
-  //Se chequea que al menos uno de los tres links exista
-  // if(!Object.keys(request.body).length) { 
-  //   return response.status(400).json({ message: "Must send video URL" });
-  // }
-
   const { id } = request.params;
   //Se chequea que el Id del proyecto sea un Id de Mongoose válido
   if (!mongoose.isValidObjectId(id)) {
@@ -84,8 +78,8 @@ const addVideo = async (request, response) => {
   videos.push(video._id);
 
   const updatedProject = await Project.findByIdAndUpdate(
-    id , {videos: videos}, { new: true })
-  .populate("teacher student videos");
+    id , {videos: videos}, { new: true }
+  ).populate("teacher student videos");
   return response.status(200).json(updatedProject);
 };
 
@@ -95,7 +89,9 @@ const deleteProject = async (request, response) => {
   if (!mongoose.isValidObjectId(id)) {
     return response.status(422).json({message: "Invalid Id"});
   }
-  const project = await Project.findById(id).populate("teacher student");
+  const project = await Project.findById(id).populate(
+    "teacher student videos"
+  );
   if (!project) {
     return response.status(404).json({message: "Project not found"});
   }
@@ -114,7 +110,7 @@ const evaluateVideo = async (request, response) => {
   }
 
   //Se chequea que el Id del proyecto y del video existan en la base de datos
-  const project = await Project.findById(id);
+  let project = await Project.findById(id);
   if (!project) {
     return response.status(404).json({message: "Project not found"});
   }
@@ -127,7 +123,9 @@ const evaluateVideo = async (request, response) => {
   const updatedVideo = await Video.findByIdAndUpdate(
     videoId , request.body, { new: true }
   );
-  return response.status(200).json(updatedVideo);
+
+  project = await Project.findById(id).populate("teacher student videos");
+  return response.status(200).json(project);
 }
 
 export { createProject, getProject, addVideo, deleteProject, evaluateVideo };
