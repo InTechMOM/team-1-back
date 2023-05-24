@@ -251,7 +251,7 @@ router.delete("/:id", deleteProject);
 
 /**
 * @swagger
-* /projects/{id}/video/:videoId:
+* /projects/{id}/video/{videoId}:
 *   put:
 *     summary: Evaluate a video
 *     tags: [Projects]
