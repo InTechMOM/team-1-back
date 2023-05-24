@@ -1,10 +1,14 @@
 import mongoose  from "mongoose";
 import User from "../../models/users.js";
 
-const createUser = async (request, response) => {
+const createUser = async (request, response, next) => {
   const newUser = new User({ ...request.body });
-  const user = await newUser.save();
-  return response.status(201).json(user); 
+  try {
+    const user = await newUser.save();
+    return response.status(201).json(user); 
+  } catch(error) {
+    next(error)
+  }
 };
 
 const getUsers = async (request, response) => {

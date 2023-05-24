@@ -14,16 +14,19 @@ dbConnection();
 
 app.use(cors());
 app.use(express.json());
-app.use(errorHandler);
-app.use("/", router);
 
-// Runing the server
+// App router
+app.use("/", router);
 app.get("/", (request, response, error) => {
   response.send("status: ok")  
 })
 
+// Config Swagger
 app.use("/docs", swaggerUi.serve);
 app.get("/docs", swaggerUi.setup(openApiSpecification));
+
+// Global error handler
+app.use(errorHandler);
 
 app.listen(port, (error) => {
   if (error) {
