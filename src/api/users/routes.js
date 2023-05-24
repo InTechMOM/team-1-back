@@ -1,7 +1,16 @@
 import express from "express";
 
-import { createValidateRequest, updateValidateRequest } from "./validate.js";
-import { createUser, getUser, putUser, deleteUser } from "./controllers.js";
+import {
+  createValidateRequest,
+  updateValidateRequest
+} from "./validate.js";
+import { 
+  createUser,
+  getUsers,
+  getUser,
+  putUser,
+  deleteUser
+} from "./controllers.js";
 
 const router = express.Router();
 /**
@@ -111,6 +120,31 @@ const router = express.Router();
  *               $ref: '#/components/schemas/User'
  */
 router.post('/', createValidateRequest, createUser);
+
+/**
+ * @swagger
+ * /users/:
+ *   get:
+ *     summary: Get users
+ *     tags: [Users]
+ *     parameters:
+ *      - in: query
+ *        name: rol
+ *        schema:
+ *          type: string
+ *          enum: [student, teacher] 
+ *        description: Get Users by rol
+ *     responses:
+ *       200:
+ *         description: Users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                $ref: '#/components/schemas/User'
+ */
+router.get("/", getUsers);
 
 /**
  * @swagger

@@ -7,6 +7,18 @@ const createUser = async (request, response) => {
   return response.status(201).json(user); 
 };
 
+const getUsers = async (request, response) => {
+  const rol = request.query.rol;
+  let filters;
+  if (!rol) {
+    filters = {}
+  } else {
+    filters = {rol: rol};
+  }
+  const users = await User.find(filters);
+  return response.status(200).json(users);
+}
+
 const getUser = async (request, response) => {
   const { id } = request.params;
   if (!mongoose.isValidObjectId(id)) {
@@ -45,4 +57,4 @@ const deleteUser = async (request, response) => {
   return response.status(200).json(deletedUser);
 };
 
-export { createUser, getUser, putUser, deleteUser };
+export { createUser, getUsers, getUser, putUser, deleteUser };
