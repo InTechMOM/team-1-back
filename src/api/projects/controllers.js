@@ -47,18 +47,18 @@ const addVideo = async (request, response) => {
     return response.status(404).json({message: "Project not found"});
   }
   
-  if (request.body.order == 0 && project.videos.length != 0) {
+  if (request.body.order === 0 && project.videos.length != 0) {
     return response.status(400).json({message: "Video already uploaded" });
-  } else if (request.body.order == 1) {
-    if (project.videos.length == 2){
+  } else if (request.body.order === 1) {
+    if (project.videos.length === 2){
       return response.status(400).json({message: "Video already uploaded" });
     } else if (project.videos.length != 1) {
       return response.status(400).json({message: "Previous video was not uploaded"});
     } else if (project.videos[0].approved != true) {
       return response.status(400).json({message: "Previos video is not approved"});
     } 
-  } else if (request.body.order == 2) {
-    if (project.videos.length == 3) {
+  } else if (request.body.order === 2) {
+    if (project.videos.length === 3) {
       return response.status(400).json({message: "Video already uploaded" });
     } else if (project.videos.length != 2) {
       return response.status(400).json({message: "Previous video was not uploaded" });
@@ -83,7 +83,7 @@ const addVideo = async (request, response) => {
   return response.status(200).json(updatedProject);
 };
 
-//En caso de desaprobar, se elimina de la base de datos y se carga uno nuevo
+//En caso de desaprobar, se sobrescribe de la base de datos y se carga uno nuevo
 const deleteProject = async (request, response) => {
   const { id } = request.params;
   if (!mongoose.isValidObjectId(id)) {

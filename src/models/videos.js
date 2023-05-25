@@ -14,7 +14,7 @@ const videoSchema = new Schema({
     type: String,
     required: false,
   },
-  comunication: {
+  communication: {
     type: String,
     required: false,
   },

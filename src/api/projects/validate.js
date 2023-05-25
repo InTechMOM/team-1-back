@@ -40,7 +40,7 @@ const updateValidateRequest = (request, response, next) => {
 const evaluateVideoSchema = Joi.object({
   criticalThinking: Joi.string(),
   colaboration: Joi.string(),
-  comunicartion: Joi.string(),
+  communication: Joi.string(),
   creativity: Joi.string(),
   approved: Joi.boolean().required(),
 });

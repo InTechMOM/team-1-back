@@ -279,7 +279,7 @@ router.delete("/:id", deleteProject);
 *                 type: string
 *               colaboration:
 *                 type: string
-*               comunication:
+*               communication:
 *                 type: string
 *               creativity:
 *                 type: string
