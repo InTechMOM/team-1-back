@@ -2,12 +2,12 @@ import mongoose  from "mongoose";
 import User from "../../models/users.js";
 
 const createUser = async (request, response, next) => {
-  const newUser = new User({ ...request.body });
   try {
+    const newUser = new User({ ...request.body });
     const user = await newUser.save();
     return response.status(201).json(user); 
   } catch(error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -24,6 +24,7 @@ const getUsers = async (request, response) => {
 }
 
 const getUser = async (request, response) => {
+  try {
   const { id } = request.params;
   if (!mongoose.isValidObjectId(id)) {
     return response.status(422).json({message: "Invalid Id"});
@@ -33,9 +34,13 @@ const getUser = async (request, response) => {
     return response.status(404).json({message: "User not found"});
   }
   return response.status(200).json(user);
+  } catch(error) {
+    next(error);
+  }
 };
 
 const putUser = async (request, response) => {
+  try {
   const { id } = request.params;
   if (!mongoose.isValidObjectId(id)) {
     return response.status(422).json({message: "Invalid Id"});
@@ -46,9 +51,13 @@ const putUser = async (request, response) => {
   }
   const updatedUser = await User.findByIdAndUpdate(id , request.body, { new: true });
   return response.status(200).json(updatedUser);
+  } catch(error) {
+    next(error);
+  }
 };
 
 const deleteUser = async (request, response) => {
+  try {
   const { id } = request.params;
   if (!mongoose.isValidObjectId(id)) {
     return response.status(422).json({message: "Invalid Id"});
@@ -59,6 +68,9 @@ const deleteUser = async (request, response) => {
   }
   const deletedUser = await User.findByIdAndDelete(id);
   return response.status(200).json(deletedUser);
+  } catch(error) {
+    next(error);
+  }
 };
 
 export { createUser, getUsers, getUser, putUser, deleteUser };
