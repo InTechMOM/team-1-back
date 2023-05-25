@@ -47,22 +47,24 @@ const addVideo = async (request, response) => {
     return response.status(404).json({message: "Project not found"});
   }
   
-  if (request.body.order === 0 && project.videos.length != 0) {
+  const { order } = request.body;
+
+  if (order === 0 && project.videos.length != 0 && project.videos[0].approved !== false) {
     return response.status(400).json({message: "Video already uploaded" });
-  } else if (request.body.order === 1) {
-    if (project.videos.length === 2){
+  } else if (order === 1) {
+    if (project.videos.length === 2 && project.videos[1].approved !== false){
       return response.status(400).json({message: "Video already uploaded" });
-    } else if (project.videos.length != 1) {
+    } else if (project.videos.length !== 1) {
       return response.status(400).json({message: "Previous video was not uploaded"});
-    } else if (project.videos[0].approved != true) {
+    } else if (project.videos[0].approved !== true) {
       return response.status(400).json({message: "Previos video is not approved"});
     } 
-  } else if (request.body.order === 2) {
-    if (project.videos.length === 3) {
+  } else if (order === 2) {
+    if (project.videos.length === 3 && project.videos[2].approved !== false) {
       return response.status(400).json({message: "Video already uploaded" });
-    } else if (project.videos.length != 2) {
+    } else if (project.videos.length !== 2) {
       return response.status(400).json({message: "Previous video was not uploaded" });
-    } else if (project.videos[1].approved != true) {
+    } else if (project.videos[1].approved !== true) {
       return response.status(400).json({message: "Previos video is not approved"});
     }
   } 
@@ -75,7 +77,11 @@ const addVideo = async (request, response) => {
   //Se crea una lista con los videos actuales 
   //y se agrega el Id del nuevo video
   const videos = [...project.videos];
-  videos.push(video._id);
+  if (project.videos[order]?.approved === false) {
+    videos[order] = video._id;
+  } else {
+    videos.push(video._id);
+  }
 
   const updatedProject = await Project.findByIdAndUpdate(
     id , {videos: videos}, { new: true }
