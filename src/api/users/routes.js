@@ -112,7 +112,7 @@ const router = express.Router();
  *           schema:
  *             $ref: '#/components/schemas/UserCreate'
  *     responses:
- *       200:
+ *       201:
  *         description: User created
  *         content:
  *           application/json:
