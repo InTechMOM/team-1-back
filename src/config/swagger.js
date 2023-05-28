@@ -9,8 +9,9 @@ const swaggerOptions = {
     },
   },
   apis: [
-    './src/api/users/routes.js',
     './src/api/auth/routes.js',
+    './src/api/users/routes.js',
+    './src/api/projects/routes.js'
   ], 
 };
 

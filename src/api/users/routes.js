@@ -1,7 +1,16 @@
 import express from "express";
 
-import { createValidateRequest, updateValidateRequest } from "./validate.js";
-import { createUser, getUser, putUser, deleteUser } from "./controllers.js";
+import {
+  createValidateRequest,
+  updateValidateRequest
+} from "./validate.js";
+import { 
+  createUser,
+  getUsers,
+  getUser,
+  putUser,
+  deleteUser
+} from "./controllers.js";
 
 const router = express.Router();
 /**
@@ -110,14 +119,38 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-
 router.post('/', createValidateRequest, createUser);
+
+/**
+ * @swagger
+ * /users/:
+ *   get:
+ *     summary: Get users
+ *     tags: [Users]
+ *     parameters:
+ *      - in: query
+ *        name: rol
+ *        schema:
+ *          type: string
+ *          enum: [student, teacher] 
+ *        description: Get Users by rol
+ *     responses:
+ *       200:
+ *         description: Users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                $ref: '#/components/schemas/User'
+ */
+router.get("/", getUsers);
 
 /**
  * @swagger
  * /users/{id}:
  *   get:
- *     summary: Create user
+ *     summary: Get user
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -127,7 +160,7 @@ router.post('/', createValidateRequest, createUser);
  *         required: true
  *         description: The user id
  *     responses:
- *       200:
+ *       201:
  *         description: User
  *         content:
  *           application/json:
@@ -148,7 +181,7 @@ router.get("/:id", getUser);
  * @swagger
  * /users/{id}:
  *   put:
- *     summary: Create user
+ *     summary: Update user
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -165,12 +198,12 @@ router.get("/:id", getUser);
  *             $ref: '#/components/schemas/UserUpdate'
  *     responses:
  *       200:
- *         description: User upload
+ *         description: User update
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
- *       400:
+ *       404:
  *         description: User not found
  *       422: 
  *         description: Invalid Id
@@ -185,7 +218,7 @@ router.put("/:id", updateValidateRequest, putUser);
 * @swagger
 * /users/{id}:
 *   delete:
-*     summary: Create user
+*     summary: Delete user
 *     tags: [Users]
 *     parameters:
 *       - in: path
@@ -201,7 +234,7 @@ router.put("/:id", updateValidateRequest, putUser);
 *           application/json:
 *             schema:
 *               $ref: '#/components/schemas/User'
-*       400:
+*       404:
 *         description: User not found
 *       422: 
 *         description: Invalid Id
