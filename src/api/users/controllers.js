@@ -12,28 +12,32 @@ const createUser = async (request, response, next) => {
 };
 
 const getUsers = async (request, response) => {
-  const rol = request.query.rol;
-  let filters;
-  if (!rol) {
-    filters = {}
-  } else {
-    filters = {rol: rol};
+  try {
+    const rol = request.query.rol;
+    let filters;
+    if (!rol) {
+      filters = {}
+    } else {
+      filters = {rol: rol};
+    }
+    const users = await User.find(filters);
+    return response.status(200).json(users);
+  } catch(error) {
+    next(error);
   }
-  const users = await User.find(filters);
-  return response.status(200).json(users);
 }
 
 const getUser = async (request, response) => {
   try {
-  const { id } = request.params;
-  if (!mongoose.isValidObjectId(id)) {
-    return response.status(422).json({message: "Invalid Id"});
-  }
-  const user = await User.findById(id);
-  if (!user){
-    return response.status(404).json({message: "User not found"});
-  }
-  return response.status(200).json(user);
+    const { id } = request.params;
+    if (!mongoose.isValidObjectId(id)) {
+      return response.status(422).json({message: "Invalid Id"});
+    }
+    const user = await User.findById(id);
+    if (!user){
+      return response.status(404).json({message: "User not found"});
+    }
+    return response.status(200).json(user);
   } catch(error) {
     next(error);
   }
@@ -41,16 +45,16 @@ const getUser = async (request, response) => {
 
 const putUser = async (request, response) => {
   try {
-  const { id } = request.params;
-  if (!mongoose.isValidObjectId(id)) {
-    return response.status(422).json({message: "Invalid Id"});
-  }
-  const user = await User.findById(id);
-  if (!user) {
-    return response.status(404).json({message: "User not found"});
-  }
-  const updatedUser = await User.findByIdAndUpdate(id , request.body, { new: true });
-  return response.status(200).json(updatedUser);
+    const { id } = request.params;
+    if (!mongoose.isValidObjectId(id)) {
+      return response.status(422).json({message: "Invalid Id"});
+    }
+    const user = await User.findById(id);
+    if (!user) {
+      return response.status(404).json({message: "User not found"});
+    }
+    const updatedUser = await User.findByIdAndUpdate(id , request.body, { new: true });
+    return response.status(200).json(updatedUser);
   } catch(error) {
     next(error);
   }
@@ -58,16 +62,16 @@ const putUser = async (request, response) => {
 
 const deleteUser = async (request, response) => {
   try {
-  const { id } = request.params;
-  if (!mongoose.isValidObjectId(id)) {
-    return response.status(422).json({message: "Invalid Id"});
-  }
-  const user = await User.findById(id);
-  if (!user) {
-    return response.status(404).json({message: "User not found"});
-  }
-  const deletedUser = await User.findByIdAndDelete(id);
-  return response.status(200).json(deletedUser);
+    const { id } = request.params;
+    if (!mongoose.isValidObjectId(id)) {
+      return response.status(422).json({message: "Invalid Id"});
+    }
+    const user = await User.findById(id);
+    if (!user) {
+      return response.status(404).json({message: "User not found"});
+    }
+    const deletedUser = await User.findByIdAndDelete(id);
+    return response.status(200).json(deletedUser);
   } catch(error) {
     next(error);
   }
